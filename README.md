@@ -1,1 +1,164 @@
 # Setting-up-a-SIEM-Security-Information-and-Event-Management-Security-Onion-
+
+<h2>Description</h2>
+This is a project/lab aimed at installing Security Onion as a network security monitoring and SIEM platform in a virtual environment, configure basic networking, and prepare it for use in monitoring and hunting operations. The goal is to be able to understand how SIEMs work and get hands-on work with open source tools within a virtualized environment.
+
+📌 1. Preparation & Environment Setup
+
+Download the Security Onion ISO
+
+Visit the official SO download page and download the latest ISO image.
+
+Verify the image integrity (checksum) if needed before use.
+
+Choose Your Virtualization Platform
+
+Use VMware Workstation/Player, VirtualBox, Proxmox, or any hypervisor you prefer.
+
+Ensure the host has adequate resources (CPU cores, RAM, and disk) to support Security Onion.
+
+Create a New Virtual Machine for Security Onion
+
+Name: e.g., Security Onion 2.4
+
+Type: Linux | Version: Oracle Linux 9.x or Other Linux 64-bit
+
+Attach the ISO: Mount the downloaded Security Onion ISO to the new VM’s CD drive.
+
+Hardware:
+
+CPU: 2+ cores (4+ recommended for heavy use)
+
+RAM: 8 GB minimum (12 GB+ recommended)
+
+Disk: 50 GB+ (200 GB+ ideal for logs/analysis depending on data retention needs)
+
+Networking:
+
+NIC1: NAT or Bridged (management interface with IP)
+
+NIC2: “sniffer” or secondary interface for network monitoring if needed (SPAN/TAP)
+
+🛠️ 2. Installing the Operating System
+
+Power On the VM
+
+Boot from ISO and wait for the initial Security Onion installer menu.
+
+Start Installation
+
+When prompted, select Install Security Onion (the installer will be automatically invoked).
+
+Follow the on-screen guided installer:
+
+Choose Language, Keyboard Layout, and other regional settings.
+
+Partition disks (default is usually acceptable).
+
+Enter a username and password for the admin account.
+
+Complete OS Installation
+
+Allow the installer to copy files and configure the base system.
+
+Once complete, reboot the VM.
+
+Remove the ISO if the system doesn’t automatically eject it after install.
+
+⚙️ 3. Initial Configuration (so-setup)
+
+After the initial reboot, Security Onion Setup will launch automatically. If not, you can manually start it:
+
+sudo so-setup
+
+During the Setup Wizard:
+
+Deployment Type
+
+Choose either Standalone (all-in-one) or a distributed deployment with manager/search nodes.
+
+For a lab or evaluation, a Standalone install is typical.
+
+Network Configuration
+
+Assign the management interface (with an IP).
+
+If present, select the second interface as a sniffer (this interface usually will not have an IP).
+
+Confirm the IP, gateway, and DNS settings.
+
+Host and Domain
+
+Assign a hostname (e.g., sec-onion-lab).
+
+Optionally add a domain if applicable to your environment.
+
+Services & Use Case
+
+Choose features to enable (analytics, alerts, dashboards, etc.).
+
+Set whether this node is manager, search, sensor, or all-in-one.
+
+Finalize
+
+Review choices and confirm.
+
+Setup will install and configure security services, generate certificates, and prepare dashboards.
+
+Important: The hostname you set during this step is used to generate certificates and should not be changed later once setup is complete.
+
+🌐 4. Post-Install Access & Verification
+
+Login to the System
+
+After installation, log in via the console using your admin credentials.
+
+Validate Services
+
+Confirm that core services are running:
+
+sudo so-status
+
+
+This verifies that key components (suricata, elastic, kibana, etc.) are up.
+
+Web Interface
+
+From a browser on another machine, access the Security Onion web UI at the management IP:
+https://<your-manager-ip>
+
+You should see dashboards, alerts, and search interfaces.
+
+🔧 5. Allow Analyst & Client Access (so-allow)
+
+Use the built-in utility to allow analyst IP(s) to interact with the manager:
+
+sudo so-allow
+
+
+Choose Analyst Role
+
+Enter the IP or subnet of the machine you will use for browser access.
+
+This creates firewall rules permitting that access.
+
+🧰 6. Confirm Monitoring & Data Flow
+
+Verify Dashboards
+
+You should see initial data feeds if any traffic has been captured.
+
+Test Alerts
+
+Generate or import test traffic (e.g., via PCAP) to confirm IDS signatures trigger alerts.
+
+Confirm visibility in Alerts, Dashboards, and other panels.
+
+
+
+
+
+
+
+
+
